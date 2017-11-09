@@ -19,7 +19,7 @@ project_dir="$(cd -P -- "$(dirname -- "$0")" 2>&1 > /dev/null && pwd -P)"
 if [ -z "$project_dir" ]
 then
   echo "Some error occured getting the full path to this project's directory."
-  
+
   # this is intended to be sourced instead of executed so we return
   # instead of exiting so we don't exit the shell session entirely
   return 1
@@ -45,6 +45,13 @@ export machine_type=${MACHINE_TYPE:-'n1-standard-1'}
 export docker_registry=${DOCKER_REGISTRY:-"gcr.io/$project_name"}
 export docker_image_name=${DOCKER_IMAGE_NAME:-'glusterfs-heketi-bootstrap'}
 export docker_image_version=${DOCKER_IMAGE_VERSION:-'0.0.1'}
+
+if [ -z "$DOCKER_IMAGE_NAME" ]
+then
+  export job_image='stevenaldinger/gke-glusterfs-heketi:latest'
+else
+  export job_image="gcr.io/$project_name/$docker_image_name:$docker_image_version"
+fi
 # ----------------------- [END] set optional variables ----------------------- #
 
 # ---------------- [START] ensure script requirements are met ---------------- #
@@ -54,7 +61,7 @@ if [ -z "$(which gcloud)" ]
 then
   echo "You need gcloud installed."
   echo "Visit https://cloud.google.com/sdk/downloads to download the latest version."
-  
+
   script_requirements_met='false'
 fi
 
@@ -69,14 +76,14 @@ if [ -z "$project_name" ] || [ -z "$cluster_name" ] || [ -z "$zone" ]
 then
   echo "You're missing required config variables."
   echo "Make sure there are values for everything under \"required variables\" in $project_dir/config"
-  
+
   script_requirements_met='false'
 fi
 
 if [ "$node_count" -lt 3 ]
 then
   echo "You need at least 3 nodes in the cluster for Heketi to run properly"
-  
+
   script_requirements_met='false'
 fi
 
@@ -104,15 +111,15 @@ gke_glusterfs_heketi_push_image () {
 
 gke_glusterfs_heketi_generate_k8s () {
   rm -rf "$project_dir/k8s"
-  
+
   mkdir -p "$project_dir/k8s"
-  
+
   cat > "$project_dir/k8s/00-namespace.yaml" <<EOF
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: glusterfs-heketi-bootstrap  
+  name: glusterfs-heketi-bootstrap
 EOF
 
 cat > "$project_dir/k8s/01-configmap.yaml" <<EOF
@@ -144,7 +151,7 @@ spec:
       restartPolicy: Never
       containers:
       - name: glusterfs-heketi-bootstrap
-        image: gcr.io/$project_name/$docker_image_name:$docker_image_version
+        image: $job_image
         securityContext:
           capabilities: {}
           privileged: true
