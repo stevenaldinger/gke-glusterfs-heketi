@@ -1,0 +1,46 @@
+#!/bin/bash
+
+set -x
+
+# Added sleep to try to avoid text file busy error
+
+# + /gluster-heketi-bootstrap/scripts/job/01-attach-disks.sh
+# /gluster-heketi-bootstrap/run: /gluster-heketi-bootstrap/scripts/job/01-attach-disks.sh: /bin/bash: bad interpreter: Text file busy
+
+gke_glusterfs_heketi_job_scripts_dir="$GLUSTER_HEKETI_BOOTSTRAP_DIR/scripts/job"
+
+chmod a+x $gke_glusterfs_heketi_job_scripts_dir/*sh
+
+sleep 5
+
+$gke_glusterfs_heketi_job_scripts_dir/01-attach-disks.sh
+
+sleep 1
+
+$gke_glusterfs_heketi_job_scripts_dir/02-set-kernel-modules.sh
+
+sleep 1
+
+$gke_glusterfs_heketi_job_scripts_dir/03-generate-topology.sh
+
+sleep 1
+
+$gke_glusterfs_heketi_job_scripts_dir/04-glusterfs-firewall-rules.sh
+
+sleep 1
+
+$gke_glusterfs_heketi_job_scripts_dir/05-deploy-gluster-and-heketi.sh
+
+sleep 1
+
+$gke_glusterfs_heketi_job_scripts_dir/06-change-heketi-clusterip-to-nodeport.sh
+
+sleep 1
+
+$gke_glusterfs_heketi_job_scripts_dir/07-glusterfs-firewall-rules-update.sh
+
+sleep 1
+
+$gke_glusterfs_heketi_job_scripts_dir/08-create-glusterfs-heketi-storage-class.sh
+
+set +x

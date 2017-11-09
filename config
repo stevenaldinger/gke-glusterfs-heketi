@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# ------------------------ [START] required variables ------------------------ #
+# EXAMPLES:
+# CLOUDSDK_PROJECT_NAME='steven-aldinger'
+# CLOUDSDK_CLUSTER_NAME='development'
+# CLOUDSDK_COMPUTE_ZONE='us-east1-c'
+
+CLOUDSDK_PROJECT_NAME=''
+CLOUDSDK_CLUSTER_NAME=''
+CLOUDSDK_COMPUTE_ZONE=''
+# ------------------------- [END] required variables ------------------------- #
+
+# ------------------------ [START] optional variables ------------------------ #
+# will default to GKE's default at the time the script is run
+CLUSTER_VERSION=''
+
+# must be greater than or equal to 3
+# defaults to '3'
+NODE_COUNT=''
+
+# defaults to 'n1-standard-1'
+MACHINE_TYPE=''
+
+# defaults to "gcr.io/$CLOUDSDK_PROJECT_NAME"
+DOCKER_REGISTRY=''
+
+# used if you want to build your own image
+# defaults to 'glusterfs-heketi-bootstrap'
+DOCKER_IMAGE_NAME=''
+
+# defaults to '0.0.1'
+DOCKER_IMAGE_VERSION=''
+# ------------------------- [END] optional variables ------------------------- #
