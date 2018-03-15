@@ -184,7 +184,7 @@ gke_glusterfs_heketi_delete_gluster_disks () {
   disk_list=""
 
   echo "Deleting..."
-  for disk in $(gcloud compute disks list --format="table(name)" --filter='description=gfs-k8s-brick')
+  for disk in $(gcloud compute disks list --format="table(name)" --filter="description=${cluster_name}-gfs-k8s-brick")
   do
     if [ "$disk_count" -eq 0 ]
     then
