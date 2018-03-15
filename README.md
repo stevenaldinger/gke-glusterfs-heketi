@@ -6,7 +6,7 @@
 2. Source [helpers](helpers)
 3. Generate `k8s` (run `gke_glusterfs_heketi_generate_k8s`)
 3. Create a cluster (run `gke_glusterfs_heketi_create_cluster` if you want)
-4. Run `kubectl -n glusterfs-heketi-bootstrap create clusterrolebinding glusterfs-heketi-bootstrap --clusterrole=cluster-admin --user=system:serviceaccount:glusterfs-heketi-bootstrap:default --namespace=glusterfs-heketi-bootstrap` for deploy
+4. Run `kubectl -n glusterfs-heketi-bootstrap create clusterrolebinding glusterfs-heketi-bootstrap --clusterrole=cluster-admin --user=system:serviceaccount:glusterfs-heketi-bootstrap:default --namespace=glusterfs-heketi-bootstrap` for deploy. Next `gcloud iam service-accounts list` and paste email to `kubectl create clusterrolebinding <EMAIL>-cluster-admin-binding --clusterrole=cluster-admin --user=<EMAIL>`
 5. Deploy `Job` within the cluster (run `gke_glusterfs_heketi_deploy_glusterfs_heketi`)
 6. Wait for it to finish
 
