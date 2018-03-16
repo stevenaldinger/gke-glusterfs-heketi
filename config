@@ -23,7 +23,7 @@ NODE_COUNT=''
 MACHINE_TYPE=''
 
 # NOTE: For building and pushing images, the script will use the defaults explained below.
-#       For running the kubernetes job, the script will default to 'stevenaldinger/gke-glusterfs-heketi:latest'
+#       For running the kubernetes job, the script will default to 'tymlezgkek8s/gke-glusterfs-heketi:latest'
 # defaults to "gcr.io/$CLOUDSDK_PROJECT_NAME"
 DOCKER_REGISTRY=''
 
