@@ -40,3 +40,26 @@ echo ""
 # Set context to new cluster
 gcloud container clusters get-credentials "$cluster_name" --zone "$zone" --project "$project_name"
 # ---------------------- [END] Create Kubernetes cluster --------------------- #
+
+
+
+# --------------------- [START] Add packages -------------------- #
+for node in $(kubectl get nodes -o name)
+do
+  node=$(basename $node)
+
+  echo ""
+  echo " ======================== [START] Configuring $node software-properties-common ======================== "
+  echo ""
+
+  gcloud compute ssh "$node" \
+    --zone "$zone" \
+    --command "\
+      sudo sh -c '\
+        apt-get update && apt-get install software-properties-common -y \
+        '"
+  echo ""
+  echo " ========================= [END] Configuring $node ========================= "
+  echo ""
+done
+# ---------------------- [END] Add packages --------------------- #
