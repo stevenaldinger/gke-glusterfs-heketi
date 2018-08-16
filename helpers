@@ -47,6 +47,8 @@ export docker_registry=${DOCKER_REGISTRY:-"gcr.io/$project_name"}
 export docker_image_name=${DOCKER_IMAGE_NAME:-'glusterfs-heketi-bootstrap'}
 export docker_image_version=${DOCKER_IMAGE_VERSION:-'0.0.1'}
 
+# if DOCKER_IMAGE_NAME was not configured, defaults to the public dockerhub
+# image at https://hub.docker.com/r/stevenaldinger/gke-glusterfs-heketi/
 if [ -z "$DOCKER_IMAGE_NAME" ]
 then
   # my public dockerhub
@@ -328,6 +330,7 @@ kind: StorageClass
 metadata:
   name: glusterfs-storage
 provisioner: kubernetes.io/glusterfs
+reclaimPolicy: Retain
 parameters:
   resturl: "http://${external_ip_first_node}:${heketi_nodeport}"
 EOF
@@ -336,6 +339,56 @@ EOF
   # ----------------------- [START] Apply storage class ------------------------ #
   kubectl apply -f "$storage_class_yaml_path"
   # ------------------------ [END] Apply storage class ------------------------- #
+}
+
+create_etcd_rbac_roles () {
+  cd ./k8s-example/etcd/rbac/
+  ./create_role.sh
+  cd -
+}
+
+deploy_etcd_operator_and_cluster () {
+  kubectl apply -f ./k8s-example/etcd/operator-deployment.yaml
+  kubectl apply -f ./k8s-example/etcd/cluster-deployment.yaml
+}
+
+deploy_example_wordpress_and_mariadb () {
+  kubectl apply -f k8s-example/_configmaps
+  kubectl apply -f k8s-example/_secrets
+
+  # kubectl apply -f k8s-example/mariadb/01-persistent-volume-claim.yaml
+  # kubectl apply -f k8s-example/mariadb/01.service.yaml
+  # kubectl apply -f k8s-example/mariadb/02-statefulset.yaml
+
+  kubectl apply -f k8s-example/percona/01.persistent-volume-claim.yaml
+  kubectl apply -f k8s-example/percona/01.service.yaml
+  kubectl apply -f k8s-example/percona/02.statefulset.yaml
+
+  # give db time to initialize
+  sleep 120
+
+  kubectl apply -f k8s-example/wordpress/01-persistent-volume-claim.yaml
+  kubectl apply -f k8s-example/wordpress/01.service.yaml
+  # kubectl apply -f k8s-example/wordpress/02-deployment.yaml
+  kubectl apply -f k8s-example/wordpress/02-statefulset.yaml
+}
+
+delete_example_wordpress_and_mariadb () {
+  kubectl delete -f k8s-example/_configmaps
+  kubectl delete -f k8s-example/_secrets
+
+  # kubectl delete -f k8s-example/mariadb/01-persistent-volume-claim.yaml
+  # kubectl delete -f k8s-example/mariadb/01.service.yaml
+  # kubectl delete -f k8s-example/mariadb/02-statefulset.yaml
+
+  kubectl delete -f k8s-example/percona/01.persistent-volume-claim.yaml
+  kubectl delete -f k8s-example/percona/01.service.yaml
+  kubectl delete -f k8s-example/percona/02.statefulset.yaml
+
+  kubectl delete -f k8s-example/wordpress/01-persistent-volume-claim.yaml
+  kubectl delete -f k8s-example/wordpress/01.service.yaml
+  kubectl delete -f k8s-example/wordpress/02-statefulset.yaml
+  # kubectl delete -f k8s-example/wordpress/02-deployment.yaml
 }
 # -------------------------- [END] helper functions -------------------------- #
 
@@ -351,6 +404,10 @@ echo "- gke_glusterfs_heketi_deploy_glusterfs_heketi"
 echo "- gke_glusterfs_heketi_create_cluster"
 echo "- gke_glusterfs_heketi_delete_cluster"
 echo "- gke_glusterfs_heketi_delete_cluster_and_disks"
+echo "- deploy_example_wordpress_and_mariadb"
+echo "- delete_example_wordpress_and_mariadb"
+echo "- deploy_etcd_operator_and_cluster"
+echo "- create_etcd_rbac_roles"
 echo ""
 echo "---------------------------------------------"
 echo "Current config:"

@@ -1,0 +1,9 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sql
+  namespace: default
+data:
+  # db-host: "db-0.mariadb.default.svc.cluster.local:3306"
+  db-host: "db-0.mariadb.default.svc.cluster.local:3306"

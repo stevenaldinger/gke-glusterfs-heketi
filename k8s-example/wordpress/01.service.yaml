@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    component: wordpress
+  name: wordpress
+  namespace: default
+spec:
+  # type: ClusterIP
+  type: LoadBalancer
+  # loadBalancerIP: 35.196.48.98
+  selector:
+    component: wordpress
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http

@@ -1,20 +1,20 @@
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mariadb
+  name: db
   namespace: default
-  labels:
-    component: mariadb
 spec:
+  selector:
+    matchLabels:
+      app: mariadb
   serviceName: mariadb
   replicas: 1
   template:
     metadata:
-      name: mariadb
       namespace: default
       labels:
-        component: mariadb
+        app: mariadb
     spec:
       restartPolicy: Always
       terminationGracePeriodSeconds: 10
@@ -36,17 +36,29 @@ spec:
         - mysqld
         - --bind-address=0.0.0.0
         ports:
-        - name: http
+        - name: sql
           containerPort: 3306
         env:
         - name: MYSQL_ROOT_PASSWORD
-          value: root
-        - name: MYSQL_USER
-          value: user
-        - name: MYSQL_PASSWORD
-          value: password
+          valueFrom:
+            secretKeyRef:
+              name: sql
+              key: root-pass
         - name: MYSQL_DATABASE
-          value: example
+          valueFrom:
+            secretKeyRef:
+              name: sql
+              key: db-name
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: sql
+              key: username
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: sql
+              key: password
         volumeMounts:
         - name: mariadb-volume
           mountPath: /var/lib/mysql

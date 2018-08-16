@@ -1,13 +1,14 @@
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mariadb
+  name: percona
   namespace: default
   labels:
-    app: example-glusterfs-heketi
+    app: example-percona
 spec:
   accessModes:
-    - "ReadWriteOnce"
+  - "ReadWriteOnce"
   resources:
     requests:
       storage: "1Gi"

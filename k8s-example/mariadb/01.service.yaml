@@ -1,0 +1,32 @@
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   labels:
+#     component: mariadb
+#   name: mariadb
+#   namespace: default
+# spec:
+#   type: ClusterIP
+#   selector:
+#     component: mariadb
+#   ports:
+#   - name: http
+#     port: 3306
+#     protocol: TCP
+#     targetPort: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb
+  namespace: default
+  labels:
+    app: mariadb
+spec:
+  ports:
+  - port: 3306
+    name: sql
+  clusterIP: None
+  selector:
+    app: mariadb

@@ -13,6 +13,7 @@ kind: StorageClass
 metadata:
   name: glusterfs-storage
 provisioner: kubernetes.io/glusterfs
+reclaimPolicy: Retain
 parameters:
   resturl: "http://${external_ip_first_node}:${heketi_nodeport}"
 EOF

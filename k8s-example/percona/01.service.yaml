@@ -1,0 +1,31 @@
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: mysql
+#   labels:
+#     name: mysql
+# spec:
+#   ports:
+#     - port: 3306
+#       name: mysql
+#       targetPort: 3306
+#       protocol: TCP
+#   clusterIP: None
+#   selector:
+#     name: mysql
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb
+  namespace: default
+  labels:
+    name: mariadb
+spec:
+  ports:
+  - port: 3306
+    name: sql
+  clusterIP: None
+  selector:
+    name: mariadb

@@ -1,0 +1,72 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      name: mariadb
+  serviceName: mariadb
+  replicas: 3
+  template:
+    metadata:
+      namespace: default
+      labels:
+        name: mariadb
+    spec:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 10
+      initContainers:
+      - name: "remove-lost-found"
+        image: "busybox:1.26.2"
+        imagePullPolicy: Always
+        command:
+        - "rm"
+        - "-rf"
+        - "/var/lib/mysql/lost+found"
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: mariadb-volume
+      containers:
+      - name: mariadb
+        image: perconalab/percona-xtradb-cluster:5.7
+        ports:
+        - name: sql
+          containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: sql
+              key: root-pass
+        - name: DISCOVERY_SERVICE
+          # value: example-etcd-cluster:2379
+          value: example-etcd-cluster-client:2379
+        - name: XTRABACKUP_PASSWORD
+          value: k8spassword
+        - name: CLUSTER_NAME
+          value: percona
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: sql
+              key: db-name
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: sql
+              key: username
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: sql
+              key: password
+        volumeMounts:
+        - name: mariadb-volume
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mariadb-volume
+        persistentVolumeClaim:
+          claimName: percona

@@ -31,7 +31,7 @@ DOCKER_REGISTRY=''
 DISK_SIZE='20'
 
 # used if you want to build your own image
-# defaults to 'glusterfs-heketi-bootstrap'
+# defaults to public 'glusterfs-heketi-bootstrap'
 DOCKER_IMAGE_NAME='glusterfs-heketi-bootstrap'
 
 # defaults to '0.0.1'
