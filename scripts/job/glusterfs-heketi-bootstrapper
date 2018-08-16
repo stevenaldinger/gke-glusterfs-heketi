@@ -39,8 +39,12 @@ sleep 1
 
 $gke_glusterfs_heketi_job_scripts_dir/07-glusterfs-firewall-rules-update.sh
 
-sleep 1
+sleep 5
 
 $gke_glusterfs_heketi_job_scripts_dir/08-create-glusterfs-heketi-storage-class.sh
 
+echo "Successfully bootstrapped!"
+
 set +x
+
+exit 0

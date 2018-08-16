@@ -17,9 +17,9 @@ do
   echo ""
 
   gcloud compute --project "$PROJECT_ID" disks create "${CLUSTER_NAME}-disk-$n" \
-    --size '50' \
+    --size "$DISK_SIZE" \
     --zone "$ZONE" \
-    --description '${CLUSTER_NAME}-gfs-k8s-brick' \
+    --description "${CLUSTER_NAME}-gfs-k8s-brick" \
     --type 'pd-ssd'
 
   gcloud compute instances attach-disk $node --disk "${CLUSTER_NAME}-disk-$n" --zone "$ZONE"
@@ -27,9 +27,9 @@ do
   n=$(( $n + 1 ))
 
   gcloud compute --project "$PROJECT_ID" disks create "${CLUSTER_NAME}-disk-$n" \
-    --size '50' \
+    --size "$DISK_SIZE" \
     --zone "$ZONE" \
-    --description '${CLUSTER_NAME}-gfs-k8s-brick' \
+    --description "${CLUSTER_NAME}-gfs-k8s-brick" \
     --type 'pd-ssd'
 
   gcloud compute instances attach-disk "$node" --disk "${CLUSTER_NAME}-disk-$n" --zone "$ZONE"
@@ -37,9 +37,9 @@ do
   n=$(( $n + 1 ))
 
   gcloud compute --project "$PROJECT_ID" disks create "${CLUSTER_NAME}-disk-$n" \
-    --size '50' \
+    --size "$DISK_SIZE" \
     --zone "$ZONE" \
-    --description '${CLUSTER_NAME}-gfs-k8s-brick' \
+    --description "${CLUSTER_NAME}-gfs-k8s-brick" \
     --type 'pd-ssd'
 
   gcloud compute instances attach-disk "$node" --disk "${CLUSTER_NAME}-disk-$n" --zone "$ZONE"
