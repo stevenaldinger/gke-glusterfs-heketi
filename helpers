@@ -48,7 +48,7 @@ export docker_image_version=${DOCKER_IMAGE_VERSION:-'0.0.1'}
 
 if [ -z "$DOCKER_IMAGE_NAME" ]
 then
-  export job_image='stevenaldinger/gke-glusterfs-heketi:latest'
+  export job_image='tymlezgkek8s/gke-glusterfs-heketi:latest'
 else
   export job_image="gcr.io/$project_name/$docker_image_name:$docker_image_version"
 fi
@@ -184,7 +184,7 @@ gke_glusterfs_heketi_delete_gluster_disks () {
   disk_list=""
 
   echo "Deleting..."
-  for disk in $(gcloud compute disks list --format="table(name)" --filter='description=gfs-k8s-brick')
+  for disk in $(gcloud compute disks list --format="table(name)" --filter="description=${cluster_name}-gfs-k8s-brick")
   do
     if [ "$disk_count" -eq 0 ]
     then

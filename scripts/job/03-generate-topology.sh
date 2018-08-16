@@ -14,7 +14,7 @@ cat > "$topology_path" <<EOF
       "nodes": [
 EOF
 
-for instance in $(gcloud compute instances list | grep -v INTERNAL_IP | awk '{print $1","$4}')
+for instance in $(gcloud compute instances list  --filter="metadata.items.key['cluster-name']['value']='${CLUSTER_NAME}'" | grep -v INTERNAL_IP | awk '{print $1","$4}')
 do
 nodeip=$(echo $instance | cut -d"," -f2)
 nodename=$(echo $instance | cut -d"," -f1)
