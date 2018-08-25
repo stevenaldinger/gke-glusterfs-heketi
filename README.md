@@ -1,5 +1,12 @@
 # Hyper-converged GlusterFS and Heketi Dynamic Volume Provisioning on Google Container Engine (GKE)
 
+<div>
+  <a class="donate-with-crypto"
+     href="https://commerce.coinbase.com/checkout/3acb85e4-7334-4002-b9e5-38a85bc4548e">
+    <span>Donate with Crypto for More Blogs and Tutorials</span>
+  </a>
+</div>
+
 ## Usage
 
 1. Edit [config](config) to match your GKE project/zone
