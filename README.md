@@ -5,7 +5,9 @@
      href="https://commerce.coinbase.com/checkout/3acb85e4-7334-4002-b9e5-38a85bc4548e">
     <span>Donate with Crypto for More Blogs and Tutorials</span>
   </a>
+
   <script src="https://commerce.coinbase.com/v1/checkout.js?version=201807">
+
   </script>
 </div>
 
